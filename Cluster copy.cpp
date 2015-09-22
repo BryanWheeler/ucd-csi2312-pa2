@@ -1,5 +1,5 @@
 //
-// Created by Bryan Wheeler on 9/20/15.
+// Created by Bryan Wheeler
 //
 
 #include "Cluster.h"
