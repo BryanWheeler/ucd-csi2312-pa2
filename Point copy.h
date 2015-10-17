@@ -7,12 +7,15 @@ namespace Clustering {
 
     class Point {
 
+
     private:
 
         int dim;        // number of dimensions of the point
         double *values; // values of the point's dimensions
 
     public:
+        Point() : dim(0), values(NULL){};
+
         Point(int);
 
         Point(int, double *);
@@ -22,29 +25,30 @@ namespace Clustering {
 
         Point &operator=(const Point &);
 
+        ~Point();
+
         //Overloaded Comparison Operators
-        bool operator==(const Point &, const Point &);
-        bool operator!=(const Point &, const Point &);
-        bool operator<(const Point &, const Point &);
-        bool operator<=(const Point &, const Point &);
-        bool operator>(const Point &, const Point &);
-        bool operator>=(const Point &, const Point &);
+        friend bool operator==(const Point &, const Point&);
+        friend bool operator!=(const Point &, const Point&);
+        friend bool operator<(const Point &, const Point&);
+        friend bool operator<=(const Point &, const Point &);
+        friend bool operator>(const Point &, const Point &);
+        friend bool operator>=(const Point &, const Point &);
 
         //Overloaded Arithmetic Operators
-        Point &operator+(const Point &, const Point &);
-        Point &operator-(const Point &, const Point &);
-        Point &operator*(const Point &, double);
-        Point &operator/(const Point &, double);
+        friend const Point &operator+(const Point &, const Point &);
+        friend const Point &operator-(const Point &, const Point &);
+        friend const Point &operator-(const Point &);
+        friend const Point &operator*(const Point &, double);
+        friend const Point &operator/(const Point &, double);
 
         //Overloaded Compound Assignment Operators
-        Point &operator+=(Point &, const Point &);
-        Point &operator-=(Point &, const Point &);
-        Point &operator*=(Point &, double);
-        Point &operator/=(Point &, double);
+        friend const Point &operator+=(const Point &, const Point&);
+        friend const Point &operator-=(const Point &, const Point &);
+        friend const Point &operator*=(const Point &, double);
+        friend const Point &operator/=(const Point &, double);
 
 
-
-        ~Point();
 
 
         //Mutator Methods
