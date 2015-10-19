@@ -31,13 +31,15 @@ namespace Clustering {
         ~Cluster();
 
         //Linked List Sort
-        void sortList(Cluster&);
+        void sortList();
 
         //Add Function
         void add(Cluster&, const PointPtr);
+        friend const Cluster &operator+(const Cluster&, const PointPtr);
         friend const Cluster &operator+=(Cluster&, const PointPtr);
         //Remove Function
         void remove(Cluster&, const PointPtr);
+        friend const Cluster &operator-(const Cluster&, const PointPtr);
         friend const Cluster &operator-=(Cluster&, const PointPtr);
 
         //Overloaded Arithmetic Operators
@@ -48,7 +50,16 @@ namespace Clustering {
         friend bool operator==(const Cluster&, const Cluster&);
 
 
+        ///Accessor Methods
+        int getSize() const {return size;}
+        LNodePtr getPoints() const {return points;}
 
+        //Mutator Method
+        void setSize(int);
+        void setPointsToNext();
+        void setPoints(LNodePtr);
 
     };
 }
+
+#endif

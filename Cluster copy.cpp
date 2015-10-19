@@ -1,9 +1,23 @@
 //
-// Created by Bryan Wheeler
+// Created by Bryan Wheeler on 9/20/15.
 //
 
 #include "Cluster.h"
 #include <cassert>
+
+//Mutator Method
+void Clustering::Cluster::setSize(int i) {
+this->size = i;
+}
+
+void Clustering::Cluster::setPointsToNext() {
+    this->points = this->points->next;
+}
+
+void Clustering::Cluster::setPoints(LNodePtr point) {
+    this->points = point;
+}
+
 
 //Copy Constructor
 Clustering::Cluster::Cluster(const Clustering::Cluster &cluster) {
@@ -30,7 +44,7 @@ Clustering::Cluster::Cluster(const Clustering::Cluster &cluster) {
 
     cpyOfThis->next = NULL;
 
-    sortList(*this);
+    this->sortList();
 
 
 }
@@ -55,112 +69,152 @@ Clustering::Cluster &Clustering::Cluster::operator=(const Clustering::Cluster &c
 
     cpyOfThis->next = NULL;
 
-    sortList(*this);
+    this->sortList();
 
     return * this;
 }
 
 //Destructor
 Clustering::Cluster::~Cluster() {
-    delete points;
+    delete [] points;
 
 }
 
 
 //Addition Cluster Overload, Union Operator
 const Clustering::Cluster& operator+(const Clustering::Cluster &clusterA, const Clustering::Cluster &clusterB) {
-    Cluster* result = new Cluster();
+    Clustering::Cluster* result;// = new Clustering::Cluster();
 
     *result = clusterA;
-    LNode* currentA = clusterA.points;
-    LNode* currentB = clusterB.points;
-    /*LNode* end = result->points;
+    int size = clusterA.getSize();
+    Clustering::LNode* currentA = clusterA.getPoints();
+    Clustering::LNode* currentB = clusterB.getPoints();
+    Clustering::LNode* end = result->getPoints();
     while(end->next != NULL){
         end = end->next;
     }
-    */
 
-    for(int i = 0; i < clusterA.size; i++){
-        for(int k = 0; k < clusterB.size; k++){
+
+    for(int i = 0; i < clusterA.getSize(); i++){
+        for(int k = 0; k < clusterB.getSize(); k++){
             if(currentA->p == currentB->p){
                 //do nothing
             }
             else{
-                /*LNode* addedNode = new LNode();
+                Clustering::LNode* addedNode = new Clustering::LNode();
                 addedNode->p = currentB->p;
                 end->next = addedNode;
                 end = end->next;
-                result->size++;
-                */
-                Clustering::Cluster::add(*result, currentB->p);
+                size++;
             }
             currentB = currentB->next;
         }
         currentA = currentA->next;
 
     }
-    //sortList(*result);
-
+    result->setSize(size);
+    result->sortList();
 
     return * result;
 }
 
 const Clustering::Cluster& operator+=(Clustering::Cluster &clusterA, const Clustering::Cluster &clusterB){
-    /*Cluster* result = new Cluster();
 
-    *result = clusterA;
-    */
-    LNode* currentA = clusterA.points;
-    LNode* currentB = clusterB.points;
-    int size = clusterA.size;
-    LNode* end = clusterA.points;
+
+    Clustering::LNode* currentA = clusterA.getPoints();
+    Clustering::LNode* currentB = clusterB.getPoints();
+    int size = clusterA.getSize();
+    Clustering::LNode* end = clusterA.getPoints();
     while(end->next != NULL){
         end = end->next;
     }
 
 
-    for(int i = 0; i < clusterA.size; i++){
-        for(int k = 0; k < clusterB.size; k++){
+    for(int i = 0; i < clusterA.getSize(); i++){
+        for(int k = 0; k < clusterB.getSize(); k++){
             if(currentA->p == currentB->p){
                 //do nothing
             }
             else{
-                LNode* addedNode = new LNode();
+                Clustering::LNode* addedNode = new Clustering::LNode();
                 addedNode->p = currentB->p;
                 end->next = addedNode;
                 end = end->next;
                 size++;
-
             }
             currentB = currentB->next;
         }
         currentA = currentA->next;
 
     }
-    clusterA.size = size;
-    sortList(clusterA);
+    clusterA.setSize(size);
+    clusterA.sortList();
 
 
     return clusterA;
 }
-/******************************************* DO THIS **********************/
-const Clustering::Cluster& operator+=(Clustering::Cluster &cluster, const PointPtr){
+
+
+const Clustering::Cluster& operator+(const Clustering::Cluster &cluster, const Clustering::PointPtr p){
+    Clustering::Cluster* result;// = new Clustering::Cluster();
+    *result = cluster;
+
+    int size = cluster.getSize();
+    Clustering::LNode* end = result->getPoints();
+    while(end->next != NULL){
+        end = end->next;
+    }
+
+    Clustering::LNode* addedNode = new Clustering::LNode();
+    addedNode->p = p;
+    end->next = addedNode;
+    end = end->next;
+    end->next = NULL;
+    size++;
+    result->setSize(size);
+
+    result->sortList();
+
+    return * result;
+}
+
+
+const Clustering::Cluster& operator+=(Clustering::Cluster &cluster, const Clustering::PointPtr p){
+
+    int size = cluster.getSize();
+    Clustering::LNode* end = cluster.getPoints();
+    while(end->next != NULL){
+        end = end->next;
+    }
+
+    Clustering::LNode* addedNode = new Clustering::LNode();
+    addedNode->p = p;
+    end->next = addedNode;
+    end = end->next;
+    end->next = NULL;
+    size++;
+    cluster.setSize(size);
+
+    cluster.sortList();
+
+    return cluster;
 
 }
 
 //Subtraction Cluster Overload, Intersect Operator
 const Clustering::Cluster& operator-(const Clustering::Cluster &clusterA, const Clustering::Cluster &clusterB) {
-    Cluster* result = new Cluster();
+    Clustering::Cluster* result;// = new Clustering::Cluster();
 
     *result = clusterA;
-    LNode* currentA = result->points;
-    LNode* currentB = clusterB.points;
-    LNode* head = result->points;
-    LNode* prev = nullptr;
+    int size = clusterA.getSize();
+    Clustering::LNode* currentA = result->getPoints();
+    Clustering::LNode* currentB = clusterB.getPoints();
+    Clustering::LNode* head = result->getPoints();
+    Clustering::LNode* prev = nullptr;
 
 
-    for(int i = 0; i < clusterA.size; i++){
-        for(int k = 0; k < clusterB.size; k++){
+    for(int i = 0; i < clusterA.getSize(); i++){
+        for(int k = 0; k < clusterB.getSize(); k++){
             if(currentA->p == currentB->p){
                 prev = currentA;
                 currentA = currentA->next;
@@ -175,19 +229,20 @@ const Clustering::Cluster& operator-(const Clustering::Cluster &clusterA, const 
             }
 
         }
-        if(head == result->points){
-            result->points = result->points->next;
+        if(head == result->getPoints()){
+            result->setPointsToNext();
         }
         else{}
         prev->next = head->next;
         currentA = prev->next;
         delete [] head;
-        result->size--;
+        size--;
+        result->setSize(size);
 
 
 
     }
-    sortList(*result);
+    result->sortList();
 
 
     return * result;
@@ -198,14 +253,15 @@ const Clustering::Cluster& operator-=(Clustering::Cluster &clusterA, const Clust
 
     *result = clusterA;
     */
-    LNode* currentA = clusterA.points;
-    LNode* currentB = clusterB.points;
-    LNode* head = clusterA.points;
-    LNode* prev = nullptr;
+    Clustering::LNode* currentA = clusterA.getPoints();
+    Clustering::LNode* currentB = clusterB.getPoints();
+    Clustering::LNode* head = clusterA.getPoints();
+    Clustering::LNode* prev = nullptr;
+    int size = clusterA.getSize();
 
 
-    for(int i = 0; i < clusterA.size; i++){
-        for(int k = 0; k < clusterB.size; k++){
+    for(int i = 0; i < clusterA.getSize(); i++){
+        for(int k = 0; k < clusterB.getSize(); k++){
             if(currentA->p == currentB->p){
                 prev = currentA;
                 currentA = currentA->next;
@@ -219,36 +275,108 @@ const Clustering::Cluster& operator-=(Clustering::Cluster &clusterA, const Clust
                 //do nothing
             }
         }
-        if(head == clusterA.points){
-            clusterA.points = clusterA.points->next;
+        if(head == clusterA.getPoints()){
+            clusterA.setPointsToNext();
         }
         else{}
         prev->next = head->next;
         currentA = prev->next;
         delete [] head;
-        clusterA.size--;
+        size--;
+        clusterA.setSize(size);
 
 
 
     }
-    sortList(clusterA);
+    clusterA.sortList();
 
 
     return clusterA;
 }
 
-/******************************************* DO THIS **********************/
-const Clustering::Cluster& operator-=(Clustering::Cluster &cluster, const PointPtr){
+
+const Clustering::Cluster& operator-(const Clustering::Cluster &cluster, const Clustering::PointPtr p){
+    Clustering::Cluster* result; //= new Clustering::Cluster();   <====Do I Need This?
+    *result = cluster;
+    Clustering::LNode* current = result->getPoints();
+    Clustering::LNode* head = current;
+    Clustering::LNode* prev = nullptr;
+    int size = cluster.getSize();
+
+
+    for(int i = 0; i < cluster.getSize(); i++) {
+        if (current->p == p) {
+            if (current == head) {
+                current = current->next;
+                result->setPoints(current);
+                delete[] head;
+                size--;
+                result->setSize(size);
+            }
+            else {
+                prev->next = head->next;
+                current = head->next;
+                delete[] head;
+                size--;
+                result->setSize(size);
+            }
+        }
+        else {
+            prev = current;
+            current = current->next;
+            head = current;
+        }
+    }
+
+    return * result;
+
+
+}
+
+
+const Clustering::Cluster& operator-=(Clustering::Cluster &cluster, const Clustering::PointPtr p){
+    Clustering::LNode* current = cluster.getPoints();
+    Clustering::LNode* head = current;
+    Clustering::LNode* prev = nullptr;
+    int size = cluster.getSize();
+
+
+    for(int i = 0; i < cluster.getSize(); i++) {
+        if (current->p == p) {
+            if (current == head) {
+                current = current->next;
+                cluster.setPoints(current);
+                delete[] head;
+                size--;
+                cluster.setSize(size);
+            }
+            else {
+                prev->next = head->next;
+                current = head->next;
+                delete[] head;
+                size--;
+                cluster.setSize(size);
+            }
+        }
+        else {
+            prev = current;
+            current = current->next;
+            head = current;
+        }
+    }
+
+    return cluster;
 
 }
 
 //Equivalence Comparison Operator Overload
 bool operator==(const Clustering::Cluster &clusterA, const Clustering::Cluster &clusterB){
-    assert(clusterA.size == clusterB.size);
+
+    assert(clusterA.getSize() == clusterB.getSize());
     bool result = false;
-    LNode* currentA = clusterA.points;
-    LNode* currentB = clusterB.points;
-    for (int i = 0; i < clusterA.size; i++){
+    Clustering::LNode* currentA = clusterA.getPoints();
+    Clustering::LNode* currentB = clusterB.getPoints();
+    for (int i = 0; i < clusterA.getSize(); i++){
         if(currentA->p == currentB->p){
             result = true;
         }
@@ -264,14 +392,14 @@ bool operator==(const Clustering::Cluster &clusterA, const Clustering::Cluster &
 
 
 
-void Clustering::Cluster::sortList(Clustering::Cluster &cluster) {
-    if (cluster.points != 0)
+void Clustering::Cluster::sortList() {
+    if (this->getPoints() != NULL)
     {
-        LNode* current = cluster.points;
-        LNode* previous = nullptr;
-        LNode* tempPoint = nullptr;
+        Clustering::LNode* current = this->getPoints();
+        Clustering::LNode* previous = nullptr;
+        Clustering::LNode* tempPoint = nullptr;
         bool swapTest = false;
-        int size = cluster.size;
+        int size = this->getSize();
         for (int i = 0; i < size; i++)
         {
             while (current->next != NULL)
@@ -286,8 +414,8 @@ void Clustering::Cluster::sortList(Clustering::Cluster &cluster) {
                     if (previous != 0)
                         previous->next = tempPoint;
                     previous = tempPoint;
-                    if (cluster.points == current)
-                        cluster.points = tempPoint;
+                    if (this->getPoints() == current)
+                        this->setPoints(tempPoint);
 
                 }
                 else
@@ -301,7 +429,7 @@ void Clustering::Cluster::sortList(Clustering::Cluster &cluster) {
             else
             {
                 previous = nullptr;
-                current = cluster.points;
+                current = this->getPoints();
                 swapTest = false;
             }
         }
@@ -312,41 +440,46 @@ void Clustering::Cluster::sortList(Clustering::Cluster &cluster) {
 
 void Clustering::Cluster::add(Clustering::Cluster &cluster, const Clustering::PointPtr p){
 
-    LNode* end = cluster.points;
+    int size = cluster.getSize();
+    Clustering::LNode* end = cluster.getPoints();
     while(end->next != NULL){
         end = end->next;
     }
 
-    LNode* addedNode = new LNode();
+    Clustering::LNode* addedNode = new Clustering::LNode();
     addedNode->p = p;
     end->next = addedNode;
     end = end->next;
     end->next = NULL;
-    cluster.size++;
+    size++;
+    cluster.setSize(size);
 
-    sortList(cluster);
+    cluster.sortList();
 }
 
 
 void Clustering::Cluster::remove(Clustering::Cluster &cluster, const Clustering::PointPtr p){
-    LNode* current = cluster.points;
-    LNode* head = current;
-    LNode* prev = nullptr;
+    Clustering::LNode* current = cluster.getPoints();
+    Clustering::LNode* head = current;
+    Clustering::LNode* prev = nullptr;
+    int size = cluster.getSize();
 
 
-    for(int i = 0; i < cluster.size; i++) {
+    for(int i = 0; i < cluster.getSize(); i++) {
         if (current->p == p) {
             if (current == head) {
                 current = current->next;
-                cluster.points = current;
+                cluster.setPoints(current);
                 delete[] head;
-                cluster.size--;
+                size--;
+                cluster.setSize(size);
             }
             else {
                 prev->next = head->next;
                 current = head->next;
                 delete[] head;
-                cluster.size--;
+                size--;
+                cluster.setSize(size);
             }
         }
         else {

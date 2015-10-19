@@ -43,16 +43,17 @@ namespace Clustering {
         friend const Point &operator/(const Point &, double);
 
         //Overloaded Compound Assignment Operators
-        friend const Point &operator+=(const Point &, const Point&);
-        friend const Point &operator-=(const Point &, const Point &);
-        friend const Point &operator*=(const Point &, double);
-        friend const Point &operator/=(const Point &, double);
+        friend const Point &operator+=(Point &, const Point&);
+        friend const Point &operator-=(Point &, const Point &);
+        friend const Point &operator*=(Point &, double);
+        friend const Point &operator/=(Point &, double);
 
 
 
 
         //Mutator Methods
         void setValue(int, double);
+        void setValue(int i) {*values = values[i];}
 
         //Accessor Methods
         int getDims() const { return dim; }
@@ -64,3 +65,5 @@ namespace Clustering {
 
     };
 }
+
+#endif
