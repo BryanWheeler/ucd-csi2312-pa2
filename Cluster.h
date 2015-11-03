@@ -30,8 +30,7 @@ namespace Clustering {
         Cluster& operator=(const Cluster&);
         ~Cluster();
 
-        //Linked List Sort
-        void sortList();
+
 
         //Add Function
         void add(Cluster&, const PointPtr);
@@ -58,6 +57,8 @@ namespace Clustering {
         void setSize(int);
         void setPointsToNext();
         void setPoints(LNodePtr);
+
+        void clear();
 
     };
 }
