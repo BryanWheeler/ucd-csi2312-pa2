@@ -66,7 +66,7 @@ double Clustering::Point::distanceTo(Clustering::Point &point) {
 
 //Assignment Operator
 Clustering::Point &Clustering::Point::operator=(const Clustering::Point &point) {
-    this->setDims(point.getDims());
+    this->dim = point.getDims();
     this->values = new double[this->getDims()];
     int size = this->getDims();
 

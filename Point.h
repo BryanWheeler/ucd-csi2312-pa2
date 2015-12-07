@@ -59,7 +59,7 @@ namespace Clustering {
 
         void setValue(int i) { *values = values[i];}
 
-        void setDims(int k) {this->dim = k;}
+        //void setDims(int k) {this->dim = k;}
 
         //Accessor Methods
         int getDims() const { return dim;}

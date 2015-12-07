@@ -63,22 +63,21 @@ Clustering::Cluster::~Cluster() {
 
 
 
-//NEED TO CHANGE***
-void Clustering::Cluster::remove(Clustering::Cluster &cluster, const Clustering::PointPtr p){
-    Clustering::LNode* current = cluster.getPoints();
+Clustering::Cluster & Clustering::Cluster::remove(const Clustering::PointPtr p){
+    Clustering::LNode* current = this->getPoints();
     Clustering::LNode* head = current;
     Clustering::LNode* prev = nullptr;
-    int size = cluster.getSize();
+    int size = this->getSize();
 
 
     while (current != nullptr) {
         if (*current->p == *p) {
             if (current == head) {
                 current = current->next;
-                cluster.setPoints(current);
+                this->setPoints(current);
                 delete[] head;
                 size--;
-                cluster.setSize(size);
+                this->setSize(size);
             }
             else {
                 prev->next = current->next;
@@ -86,7 +85,7 @@ void Clustering::Cluster::remove(Clustering::Cluster &cluster, const Clustering:
                 current = current->next;
                 delete[] head;
                 size--;
-                cluster.setSize(size);
+                this->setSize(size);
             }
         }
         else {
@@ -120,28 +119,27 @@ Clustering::Cluster &Clustering::Cluster::add(Clustering::PointPtr const p) {
 
 
     if (head == nullptr) {
-        addedNode->p = p;
         this->setPoints(addedNode);
     }
     else {
         while (current != nullptr) {
-            if (addedNode->p == current->p) {
+            if (*addedNode->p == *current->p) {
                 addedNode->next = current->next;
                 current->next = addedNode;
                 current = nullptr;
             }
 
-            else if (addedNode->p > current->p) {
+            else if (*addedNode->p > *current->p) {
                 prev = current;
                 current = current->next;
-                if (current == nullptr || current->p > addedNode->p) {
+                if (current == nullptr || *current->p > *addedNode->p) {
                     addedNode->next = current;
                     prev->next = addedNode;
                     current = nullptr;
                 }
             }
 
-            else if (addedNode->p < current->p) {
+            else if (*addedNode->p < *current->p) {
                 if (current == head) {
                     addedNode->next = head;
                     this->setPoints(addedNode);

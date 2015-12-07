@@ -38,7 +38,7 @@ namespace Clustering {
         friend const Cluster &operator+(const Cluster&, const PointPtr);   //DONE***WORKS
         friend const Cluster &operator+=(Cluster&, const PointPtr);        //DONE***WORKS
         //Remove Function
-        void remove(Cluster&, const PointPtr);   //DONE***WORKS
+        Cluster& remove(const PointPtr);   //DONE***WORKS
         friend const Cluster &operator-(const Cluster&, const PointPtr);   //DONE***WORKS
         friend const Cluster &operator-=(Cluster&, const PointPtr);   //DONE***WORKS
 
@@ -90,7 +90,7 @@ namespace Clustering {
         Clustering::Cluster* result = new Cluster();   //<====Do I Need This?
         *result = cluster;
 
-        result->remove(*result, p);
+        result->remove(p);
 
 
         return * result;
@@ -100,7 +100,7 @@ namespace Clustering {
 
     inline const Cluster& operator-=(Cluster &cluster, const PointPtr p){
 
-        cluster.remove(cluster, p);
+        cluster.remove(p);
 
         return cluster;
 
@@ -221,7 +221,7 @@ namespace Clustering {
                 }
             }
             if (currentA != nullptr) {
-                clusterA.remove(clusterA, currentA->p);
+                clusterA.remove(currentA->p);
                 currentA = prev->next;
             }
 
