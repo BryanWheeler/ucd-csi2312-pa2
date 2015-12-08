@@ -129,7 +129,7 @@ int main() {
 
     cout << "END OF TESTING OF POINT CLASS\n\n";
 
-    Cluster clusterTest, clusterTest2, clusterTest3, clusterTest4;
+    Cluster clusterTest, clusterTest2, clusterTest3, clusterTest4, clusterTest5;
     clusterTest.add(&test2);
     clusterTest2.add(&test);
 
@@ -147,12 +147,17 @@ int main() {
     }
 
     clusterTest3 = clusterTest + clusterTest2;
+    cout << clusterTest3;
 
     clusterTest4 = clusterTest;
 
     cout << clusterTest4;
 
     cout << clusterTest3;
+
+    clusterTest5 = clusterTest3 - clusterTest; //WORKS
+    clusterTest3 -= clusterTest2;
+
 
 
 
@@ -164,6 +169,10 @@ int main() {
     else{
         cout << "nope nope\n";
     }
+
+    cout << clusterTest5;
+
+    cout << clusterTest3;
 
 
     return 0;

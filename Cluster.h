@@ -174,22 +174,26 @@ namespace Clustering {
         Cluster* result = new Cluster();
 
         Clustering::LNode* currentA = clusterA.getPoints();
-        Clustering::LNode* currentB = clusterB.getPoints();
+        Clustering::LNode* currentB;
 
 
         while(currentA != nullptr){
+            currentB = clusterB.getPoints();
+
             while(currentB != nullptr){
                 if(*currentA->p == *currentB->p){
                     result->add(currentA->p);
-                    currentA = currentA->next;
-                    currentB = clusterB.getPoints();
+                    currentB = nullptr;
+
                 }
                 else{
                     currentB = currentB->next;
                     //do nothing
                 }
-
             }
+            currentA = currentA->next;
+
+
 
 
 
@@ -209,7 +213,7 @@ namespace Clustering {
 
             while (currentB != nullptr){
                 if(*currentA->p == *currentB->p){
-                    //Value doesn't need to be added
+                    //Value doesn't need to be removed
                     prev = currentA;
                     currentA = currentA->next;
                     currentB = clusterB.getPoints();
