@@ -5,6 +5,9 @@
 #include "Cluster.h"
 
 //Mutator Method
+
+int Clustering::Cluster::idGen = 0;
+
 void Clustering::Cluster::setSize(int i) {
 this->size = i;
 }
@@ -39,7 +42,6 @@ Clustering::Cluster::Cluster(const Clustering::Cluster &cluster) {
 }
 
 //Assignment operator overload
-//Exit code 11 after multiple runs*************
 Clustering::Cluster &Clustering::Cluster::operator=(const Clustering::Cluster &cluster) {
     LNode* current = cluster.getPoints();
 
@@ -78,6 +80,7 @@ Clustering::Cluster & Clustering::Cluster::remove(const Clustering::PointPtr p){
                 delete[] head;
                 size--;
                 this->setSize(size);
+                current = nullptr;
             }
             else {
                 prev->next = current->next;
@@ -86,6 +89,7 @@ Clustering::Cluster & Clustering::Cluster::remove(const Clustering::PointPtr p){
                 delete[] head;
                 size--;
                 this->setSize(size);
+                current = nullptr;
             }
         }
         else {
@@ -93,7 +97,9 @@ Clustering::Cluster & Clustering::Cluster::remove(const Clustering::PointPtr p){
             current = current->next;
         }
     }
+    return * this;
 }
+
 
 
 void Clustering::Cluster::clear() {
@@ -158,3 +164,124 @@ Clustering::Cluster &Clustering::Cluster::add(Clustering::PointPtr const p) {
     return *this;
 }
 
+const Clustering::Point &Clustering::Cluster::getCentroid() {
+    return centroid;
+}
+
+void Clustering::Cluster::setCentroid(Clustering::Point &point) {
+    centroid = point;
+    centroidValid = true;
+}
+
+Clustering::Point &Clustering::Cluster::computeCentroid(Clustering::Cluster &cluster) {
+    Point* newPoint = new Point();
+    LNode* current = cluster.getPoints();
+    *newPoint = *current->p;
+    current = current->next;
+    while(current != nullptr){
+        *newPoint += *current->p;
+        current = current->next;
+    }
+
+    return * newPoint;
+}
+
+bool Clustering::Cluster::centroidValidation() {
+    Point checkPoint = this->computeCentroid(*this);
+    if (checkPoint == this->getCentroid()){
+        centroidValid = true;
+        return true;
+    }
+    else{
+        return false;
+    }
+
+}
+
+void Clustering::Cluster::setValid(bool b) {
+    centroidValid = b;
+}
+
+Clustering::Cluster::Move::Move(Clustering::PointPtr const &pointer, Clustering::Cluster *clusterF,
+                                Clustering::Cluster *clusterT) {
+    ptr = pointer;
+    clusterFrom = clusterF;
+    clusterTo = clusterT;
+
+}
+
+void Clustering::Cluster::Move::perform() {
+    clusterTo->add(ptr);
+    clusterFrom->remove(ptr);
+    clusterFrom->setValid(false);
+    clusterTo->setValid(false);
+
+}
+
+void Clustering::Cluster::Move::pickPoints(int k, Clustering::PointPtr *pointArray) {
+    LNode* current = clusterFrom->getPoints();
+    int i = 0;
+
+    while(current != nullptr){
+        if(i < k){
+            *pointArray[i] = *current->p;
+            current = current->next;
+        }
+        else{
+            current = nullptr;
+        }
+    }
+}
+
+double Clustering::Cluster::intraClusterDistance() const {
+    LNode* pointOne = this->getPoints();
+    LNode* pointTwo;
+    double distance;
+
+    while(pointOne != nullptr){
+        pointTwo = pointOne->next;
+
+        while(pointTwo != nullptr){
+            distance += pointOne->p->distanceTo(*pointTwo->p);
+            pointTwo = pointTwo->next;
+        }
+        pointOne = pointOne->next;
+    }
+    distance /= 2;
+    return distance;
+
+}
+
+double Clustering::interClusterDistance(const Clustering::Cluster &c1, const Clustering::Cluster &c2) {
+    double distance;
+    LNode* clusterOne = c1.getPoints();
+    LNode* clusterTwo;
+
+    while (clusterOne != nullptr){
+        clusterTwo = c2.getPoints();
+
+        while (clusterTwo != nullptr){
+            distance += clusterOne->p->distanceTo(*clusterTwo->p);
+            clusterTwo = clusterTwo->next;
+        }
+        clusterOne = clusterOne->next;
+    }
+    distance /= 2;
+    return distance;
+}
+
+int Clustering::Cluster::getClusterEdges() {
+    int edges;
+    int size = this->getSize();
+    edges = (size * (size - 1)) / 2;
+    return edges;
+}
+
+double Clustering::interClusterEdges(const Clustering::Cluster &c1, const Clustering::Cluster &c2) {
+    int edges;
+    int sizeOne = c1.getSize();
+    int sizeTwo = c2.getSize();
+
+    edges = (sizeOne * sizeTwo);
+    return edges;
+}

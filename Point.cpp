@@ -79,8 +79,7 @@ Clustering::Point &Clustering::Point::operator=(const Clustering::Point &point) 
 //Destructor
 Clustering::Point::~Point() {
     delete [] values;
-//    delete values;
-//    delete [] Point;
+
 
 }
 

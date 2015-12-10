@@ -3,6 +3,9 @@
 
 #include <iostream>
 #include <cassert>
+#include <iomanip>
+#include <sstream>
+#include <vector>
 
 namespace Clustering {
 
@@ -17,20 +20,20 @@ namespace Clustering {
         friend bool operator>=(const Point &, const Point &);   //DONE***WORKS
 
         //Overloaded Arithmetic Operators
-        friend const Point& operator+(const Point &, const Point &);   //DONE***WORKS
-        friend const Point& operator-(const Point &, const Point &);   //DONE***WORKS
-        friend const Point& operator*(const Point &, double);   //DONE***WORKS
-        friend const Point& operator/(const Point &, double);   //DONE***WORKS
+        friend const Point &operator+(const Point &, const Point &);   //DONE***WORKS
+        friend const Point &operator-(const Point &, const Point &);   //DONE***WORKS
+        friend const Point &operator*(const Point &, double);   //DONE***WORKS
+        friend const Point &operator/(const Point &, double);   //DONE***WORKS
 
         //Overloaded Compound Assignment Operators
-        friend const Point& operator+=(Point &, const Point &);   //DONE***WORKS
-        friend const Point& operator-=(Point &, const Point &);   //DONE***WORKS
-        friend const Point& operator*=(Point &, const Point &);   //DONE***WORKS
-        friend const Point& operator/=(Point &, const Point &);   //DONE***WORKS
+        friend const Point &operator+=(Point &, const Point &);   //DONE***WORKS
+        friend const Point &operator-=(Point &, const Point &);   //DONE***WORKS
+        friend const Point &operator*=(Point &, const Point &);   //DONE***WORKS
+        friend const Point &operator/=(Point &, const Point &);   //DONE***WORKS
 
         //Overloaded File Stream
         friend std::ostream &operator<<(std::ostream &, const Point &);   //DONE***WORKS
-
+        friend std::istream &operator>>(std::istream &, const Point &);
 
 
     private:
@@ -53,16 +56,15 @@ namespace Clustering {
         ~Point();
 
 
-
         //Mutator Methods
         void setValue(int, double);
 
-        void setValue(int i) { *values = values[i];}
+        void setValue(int i) { *values = values[i]; }
 
-        //void setDims(int k) {this->dim = k;}
+        void setDims(int k) {this->dim = k;}
 
         //Accessor Methods
-        int getDims() const { return dim;}
+        int getDims() const { return dim; }
 
         double getValue(int) const;
 
@@ -89,7 +91,7 @@ namespace Clustering {
     }
 
 
-    inline bool operator!=(const Point& pointA, const Point& pointB){
+    inline bool operator!=(const Point &pointA, const Point &pointB) {
         assert(pointA.getDims() == pointB.getDims());
         int size = pointA.getDims();
         bool result;
@@ -100,7 +102,7 @@ namespace Clustering {
 
     }
 
-    inline bool operator<(const Point& pointA, const Point& pointB){
+    inline bool operator<(const Point &pointA, const Point &pointB) {
         assert(pointA.getDims() == pointB.getDims());
 
         int size = pointA.getDims();
@@ -111,7 +113,7 @@ namespace Clustering {
             else if (pointA.getValue(i) < pointB.getValue(i)) {
                 return true;
             }
-            else{
+            else {
                 return false;
             }
 
@@ -119,7 +121,7 @@ namespace Clustering {
         return false;
     }
 
-    inline bool operator<=(const Point& pointA, const Point& pointB){
+    inline bool operator<=(const Point &pointA, const Point &pointB) {
         assert(pointA.getDims() == pointB.getDims());
 
         int size = pointA.getDims();
@@ -130,7 +132,7 @@ namespace Clustering {
             else if (pointA.getValue(i) < pointB.getValue(i)) {
                 return true;
             }
-            else{
+            else {
                 return false;
             }
 
@@ -149,7 +151,7 @@ namespace Clustering {
             else if (pointA.getValue(i) > pointB.getValue(i)) {
                 return true;
             }
-            else{
+            else {
                 return false;
             }
 
@@ -168,7 +170,7 @@ namespace Clustering {
             else if (pointA.getValue(i) > pointB.getValue(i)) {
                 return true;
             }
-            else{
+            else {
                 return false;
             }
 
@@ -176,12 +178,12 @@ namespace Clustering {
         return true;
     }
 
-    inline const Point& operator+(const Point &pointA, const Point &pointB) {
+    inline const Point &operator+(const Point &pointA, const Point &pointB) {
         assert(pointA.getDims() == pointB.getDims());
 
         int size = pointA.getDims();
         double value;
-        Point* result = new Point(size);
+        Point *result = new Point(size);
 
         for (int i = 0; i < size; i++) {
             value = pointA.getValue(i) + pointB.getValue(i);
@@ -191,12 +193,12 @@ namespace Clustering {
         return *result;
     }
 
-    inline const Point& operator-(const Point &pointA, const Point &pointB) {
+    inline const Point &operator-(const Point &pointA, const Point &pointB) {
         assert(pointA.getDims() == pointB.getDims());
 
         int size = pointA.getDims();
         double value;
-        Point* result = new Point(size);
+        Point *result = new Point(size);
 
         for (int i = 0; i < size; i++) {
             value = pointA.getValue(i) - pointB.getValue(i);
@@ -208,10 +210,10 @@ namespace Clustering {
 
     }
 
-    inline const Point& operator*(const Point &point, const double d) {
+    inline const Point &operator*(const Point &point, const double d) {
         int size = point.getDims();
         double value;
-        Point* result = new Point(size);
+        Point *result = new Point(size);
 
         for (int i = 0; i < size; i++) {
             value = point.getValue(i) * d;
@@ -222,12 +224,12 @@ namespace Clustering {
 
     }
 
-    inline const Point& operator/(const Point &point, const double d) {
+    inline const Point &operator/(const Point &point, const double d) {
         assert(d != 0);
 
         int size = point.getDims();
         double value;
-        Point* result = new Point(size);
+        Point *result = new Point(size);
 
         for (int i = 0; i < size; i++) {
             value = point.getValue(i) / d;
@@ -238,7 +240,7 @@ namespace Clustering {
 
     }
 
-    inline const Point& operator+=(Point &pointA, const Point &pointB) {
+    inline const Point &operator+=(Point &pointA, const Point &pointB) {
         assert(pointA.getDims() == pointB.getDims());
 
         int size = pointA.getDims();
@@ -254,7 +256,7 @@ namespace Clustering {
 
     }
 
-    inline const Point& operator-=(Point &pointA, const Point &pointB) {
+    inline const Point &operator-=(Point &pointA, const Point &pointB) {
         assert(pointA.getDims() == pointB.getDims());
 
         int size = pointA.getDims();
@@ -270,7 +272,7 @@ namespace Clustering {
 
     }
 
-    inline const Point& operator*=(Point &point, const double d) {
+    inline const Point &operator*=(Point &point, const double d) {
         int size = point.getDims();
         double value;
 
@@ -284,7 +286,7 @@ namespace Clustering {
 
     }
 
-    inline const Point& operator/=(Point &point, const double d) {
+    inline const Point &operator/=(Point &point, const double d) {
         assert(d != 0);
 
         int size = point.getDims();
@@ -299,19 +301,44 @@ namespace Clustering {
 
     }
 
-    inline std::ostream &operator<<(std::ostream & os, const Point & point){
+    inline std::ostream &operator<<(std::ostream &os, const Point &point) {
         int size = point.getDims();
-        for(int i = 0; i < size; i++){
-            os << point.getValue(i) << " ";
+        for (int i = 0; i < size; i++) {
+            if (i != size - 1) {
+                os << std::setprecision(1) << std::fixed << point.getValue(i) << ", ";
+            }
+            else {
+                os << std::setprecision(1) << std::fixed << point.getValue(i);
+            }
         }
-        os << "\n";
 
         return os;
     }
 
+    inline std::istream &operator>>(std::istream &os, Point &point) {
+        std::vector<double> valueArr;
+        std::string data = "";
+        std::getline(os, data, '\n');
+        std::stringstream ss(data);
+        double k;
+        int dimensions = 0;
+
+        while (ss >> k) {
+            valueArr.push_back(k);
+            ++dimensions;
+
+            if (ss.peek() == ',' || ss.peek() == ' ') {
+                ss.ignore();
+            }
+        }
+        point.setDims(dimensions);
+        for (int i = 0; i < point.getDims(); i++){
+            point.setValue(i, valueArr[i]);
+        }
+
+    }
+
 }
-
-
 
 
 

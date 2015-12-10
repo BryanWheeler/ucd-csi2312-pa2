@@ -9,6 +9,6 @@ set(SOURCE_FILES
     CMakeLists.txt
     main.cpp
     Point.cpp
-    Point.h)
+    Point.h KMeans.cpp KMeans.h)
 
 add_executable(IP_PA_2 ${SOURCE_FILES})
