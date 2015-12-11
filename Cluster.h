@@ -300,16 +300,13 @@ namespace Clustering {
         while (currentA != nullptr) {
             if (*currentA->p == *currentB->p) {
                 result = true;
-                std::cout << "Entered true area\n";
             }
             else {
-                std::cout << "Entered false area\n";
                 return false;
             }
             currentA = currentA->next;
             currentB = currentB->next;
         }
-        std::cout << "Entered\n";
         return result;
     }
 

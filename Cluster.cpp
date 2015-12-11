@@ -48,7 +48,6 @@ Clustering::Cluster &Clustering::Cluster::operator=(const Clustering::Cluster &c
     for(current; current != nullptr; current = current->next){
         Point* point(current->p);
         this->add(point);
-        std::cout << "After add function\n";
     }
 
     return * this;
@@ -285,3 +284,5 @@ double Clustering::interClusterEdges(const Clustering::Cluster &c1, const Cluste
     edges = (sizeOne * sizeTwo);
     return edges;
 }
+
+
