@@ -10,6 +10,7 @@
 #include "Cluster.h"
 
 namespace Clustering {
+    template<int k, int dim>
     class KMeans {
         double Din;
         double Dout;

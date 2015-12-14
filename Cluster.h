@@ -44,13 +44,13 @@ namespace Clustering {
 
         //FRIEND FUNCTIONS----------------------------------------------------------------
         //Add Function
-        void add(const PointPtr);   //DONE***WORKS
-        friend const Cluster &operator+(const Cluster &, const PointPtr);   //DONE***WORKS
-        friend const Cluster &operator+=(Cluster &, const PointPtr);        //DONE***WORKS
+        void add(const Point&);   //DONE***WORKS
+        friend const Cluster &operator+(const Cluster &, const Point&);   //DONE***WORKS
+        friend const Cluster &operator+=(Cluster &, const Point&);        //DONE***WORKS
         //Remove Function
-        const PointPtr &remove(const PointPtr&);   //DONE***WORKS
-        friend const Cluster &operator-(const Cluster &, const PointPtr);   //DONE***WORKS
-        friend const Cluster &operator-=(Cluster &, const PointPtr);   //DONE***WORKS
+        const Point &remove(const Point&);   //DONE***WORKS
+        friend const Cluster &operator-(const Cluster &, const Point&);   //DONE***WORKS
+        friend const Cluster &operator-=(Cluster &, const Point&);   //DONE***WORKS
 
         //Overloaded Arithmetic Operators
         friend const Cluster &operator+(const Cluster &, const Cluster &);   //DONE***WORKS
@@ -83,6 +83,8 @@ namespace Clustering {
 
         const int getID() const {return id;}
 
+        bool contains(const Point&);
+
         const Point& getCentroid();
 
         //Mutator Method
@@ -107,11 +109,11 @@ namespace Clustering {
 
 
         class Move{
-            PointPtr ptr;
+            Point ptr;
             Cluster* clusterFrom;
             Cluster* clusterTo;
         public:
-            Move(const PointPtr& pointer, Cluster* clusterF, Cluster* clusterT);
+            Move(const Point& pointer, Cluster* clusterF, Cluster* clusterT);
             void perform();
             void pickPoints(int k, PointPtr *pointArray);
         };
@@ -120,7 +122,7 @@ namespace Clustering {
     };
 
 
-    inline const Cluster &operator+(const Cluster &cluster, const PointPtr p) {
+    inline const Cluster &operator+(const Cluster &cluster, const Point &p) {
         Clustering::Cluster *result = new Cluster();
         *result = cluster;
 
@@ -131,7 +133,7 @@ namespace Clustering {
 
     }
 
-    inline const Cluster &operator+=(Cluster &cluster, const PointPtr p) {
+    inline const Cluster &operator+=(Cluster &cluster, const Point &p) {
 
         cluster.add(p);
         cluster.setValid(false);
@@ -140,7 +142,7 @@ namespace Clustering {
 
     }
 
-    inline const Cluster &operator-(const Cluster &cluster, const PointPtr p) {
+    inline const Cluster &operator-(const Cluster &cluster, const Point &p) {
         Clustering::Cluster *result = new Cluster();
         *result = cluster;
 
@@ -152,7 +154,7 @@ namespace Clustering {
 
     }
 
-    inline const Cluster &operator-=(Cluster &cluster, const PointPtr p) {
+    inline const Cluster &operator-=(Cluster &cluster, const Point &p) {
 
         cluster.remove(p);
         cluster.setValid(false);
@@ -184,7 +186,7 @@ namespace Clustering {
                 }
             }
             if (currentA != nullptr) {
-                result->add(currentA->p);
+                result->add(*currentA->p);
                 currentA = currentA->next;
             }
 
@@ -216,7 +218,7 @@ namespace Clustering {
                 }
             }
             if (currentA != nullptr) {
-                clusterA.add(currentA->p);
+                clusterA.add(*currentA->p);
                 currentA = currentA->next;
             }
 
@@ -239,7 +241,7 @@ namespace Clustering {
 
             while (currentB != nullptr) {
                 if (*currentA->p == *currentB->p) {
-                    result->add(currentA->p);
+                    result->add(*currentA->p);
                     currentB = nullptr;
 
                 }
@@ -280,7 +282,7 @@ namespace Clustering {
                 }
             }
             if (currentA != nullptr) {
-                clusterA.remove(currentA->p);
+                clusterA.remove(*currentA->p);
                 currentA = prev->next;
             }
 
@@ -337,7 +339,7 @@ namespace Clustering {
             }
 
         }
-        temp.add(&point);
+        temp.add(point);
         cluster = temp;
 
     }

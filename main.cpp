@@ -7,7 +7,7 @@ using namespace std;
 using namespace Clustering;
 
 int main() {
-
+/*
     int dimension = 5;
     int dimensions = 6;
     double values[5] = {1,2,3,4,5};
@@ -158,10 +158,10 @@ int main() {
     clusterTest5 = clusterTest3 - clusterTest; //WORKS
     clusterTest3 -= clusterTest2;
 
+*/
 
 
-
-
+/*
 
     if(clusterTest4 == clusterTest2){
         cout << "woot woot\n";
@@ -173,7 +173,7 @@ int main() {
     cout << clusterTest5;
 
     cout << clusterTest3;
-
+*/
 
     return 0;
 

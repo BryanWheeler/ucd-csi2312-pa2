@@ -3,6 +3,7 @@
 //
 
 #include "Cluster.h"
+#include "RemoveFromEmptyEx.h"
 
 //Mutator Method
 
@@ -32,7 +33,7 @@ Clustering::Cluster::Cluster(const Clustering::Cluster &cluster) {
     LNode* current = cluster.getPoints();
 
     while (current != nullptr) {
-        this->add(current->p);
+        this->add(*current->p);
         current = current->next;
 
     }
@@ -47,7 +48,7 @@ Clustering::Cluster &Clustering::Cluster::operator=(const Clustering::Cluster &c
 
     for(current; current != nullptr; current = current->next){
         Point* point(current->p);
-        this->add(point);
+        this->add(*point);
     }
 
     return * this;
@@ -64,7 +65,11 @@ Clustering::Cluster::~Cluster() {
 
 
 
-const Clustering::PointPtr& Clustering::Cluster::remove(const Clustering::PointPtr& p){
+const Clustering::Point& Clustering::Cluster::remove(const Clustering::Point& p){
+    try {
+        if(this->getPoints() == nullptr){
+            throw RemoveFromEmptyEx();
+        }
         Clustering::LNode *current = this->getPoints();
         Clustering::LNode *head = current;
         Clustering::LNode *prev = nullptr;
@@ -72,7 +77,7 @@ const Clustering::PointPtr& Clustering::Cluster::remove(const Clustering::PointP
 
 
         while (current != nullptr) {
-            if (*current->p == *p) {
+            if (*current->p == p) {
                 if (current == head) {
                     current = current->next;
                     this->setPoints(current);
@@ -97,7 +102,10 @@ const Clustering::PointPtr& Clustering::Cluster::remove(const Clustering::PointP
             }
         }
         return p;
-
+    }
+    catch(PointPtr){
+        return p;
+    }
 }
 
 
@@ -114,10 +122,10 @@ void Clustering::Cluster::clear() {
 
 }
 
-void Clustering::Cluster::add(Clustering::PointPtr const p) {
+void Clustering::Cluster::add(const Clustering::Point & p) {
     Clustering::LNode *head = this->getPoints();
     Clustering::LNode *addedNode = new Clustering::LNode();
-    addedNode->p = p;
+    *addedNode->p = p;
     Clustering::LNode *prev = head;
     Clustering::LNode *current = head;
 
@@ -172,6 +180,10 @@ void Clustering::Cluster::setCentroid(Clustering::Point &point) {
 }
 
 Clustering::Point &Clustering::Cluster::computeCentroid(Clustering::Cluster &cluster) {
+    try {
+        if(cluster.getPoints() == nullptr){
+            throw RemoveFromEmptyEx();
+        }
         Point *newPoint = new Point();
         LNode *current = cluster.getPoints();
         *newPoint = *current->p;
@@ -182,6 +194,10 @@ Clustering::Point &Clustering::Cluster::computeCentroid(Clustering::Cluster &clu
         }
 
         return *newPoint;
+    }
+    catch(int){
+        EXIT_FAILURE;
+    }
 }
 
 bool Clustering::Cluster::centroidValidation() {
@@ -200,7 +216,7 @@ void Clustering::Cluster::setValid(bool b) {
     centroidValid = b;
 }
 
-Clustering::Cluster::Move::Move(Clustering::PointPtr const &pointer, Clustering::Cluster *clusterF,
+Clustering::Cluster::Move::Move(Clustering::Point const &pointer, Clustering::Cluster *clusterF,
                                 Clustering::Cluster *clusterT) {
     ptr = pointer;
     clusterFrom = clusterF;
@@ -284,3 +300,17 @@ double Clustering::interClusterEdges(const Clustering::Cluster &c1, const Cluste
 }
 
 
+bool Clustering::Cluster::contains(const Clustering::Point &point) {
+    bool result = false;
+    LNode* current = this->getPoints();
+    while(current != nullptr){
+        if(*current->p == point){
+            result = true;
+            break;
+        }
+        else{
+            current = current->next;
+        }
+    }
+    return result;
+}
