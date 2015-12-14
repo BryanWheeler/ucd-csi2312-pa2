@@ -9,6 +9,6 @@ set(SOURCE_FILES
     CMakeLists.txt
     main.cpp
     Point.cpp
-    Point.h KMeans.cpp KMeans.h)
+    Point.h KMeans.cpp KMeans.h DimensionalityMismatchEx.cpp DimensionalityMismatchEx.h OutOfBoundsEx.cpp OutOfBoundsEx.h RemoveFromEmptyEx.cpp RemoveFromEmptyEx.h ZeroClustersEx.cpp ZeroClustersEx.h)
 
 add_executable(IP_PA_2 ${SOURCE_FILES})

@@ -6,9 +6,11 @@
 #include <iomanip>
 #include <sstream>
 #include <vector>
+#include "DimensionalityMismatchEx.h"
 
 namespace Clustering {
 
+    //template <typename T, int dim>
     class Point {
 
         //Overloaded Relational Operators
@@ -33,16 +35,19 @@ namespace Clustering {
 
         //Overloaded File Stream
         friend std::ostream &operator<<(std::ostream &, const Point &);   //DONE***WORKS
-        friend std::istream &operator>>(std::istream &, const Point &);
+        friend std::istream &operator>>(std::istream &, Point &);
 
 
     private:
 
         int dim;        // number of dimensions of the point
-        double *values; // values of the point's dimensions
+        std::vector<double> values; // values of the point's dimensions
+        unsigned int id;
+        static int idGen;
+
 
     public:
-        Point() : dim(0), values(NULL) { };
+        Point() : dim(0), id(++idGen) { };
 
         Point(int);
 
@@ -59,7 +64,7 @@ namespace Clustering {
         //Mutator Methods
         void setValue(int, double);
 
-        void setValue(int i) { *values = values[i]; }
+        //void setValue(int i) { *values = values[i]; }
 
         void setDims(int k) {this->dim = k;}
 
@@ -68,6 +73,8 @@ namespace Clustering {
 
         double getValue(int) const;
 
+        int getId() const {return id;}
+
         //MemberFunctions
         double distanceTo(Point &point);
 
@@ -75,141 +82,207 @@ namespace Clustering {
     };
 
 
+    //template<typename T, int dim>
     inline bool operator==(const Point &pointA, const Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
-        int size = pointA.getDims();
-        for (int i = 0; i < size; i++) {
-            if (pointA.getValue(i) == pointB.getValue(i)) {
-                //Do nothing...Let it run through
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
             }
-            else {
-                return false;
+            if(pointA.getId() == pointB.getId()){
+                throw DimensionalityMismatchEx(2);
             }
+            int size = pointA.getDims();
+            for (int i = 0; i < size; i++) {
+                if (pointA.getValue(i) == pointB.getValue(i)) {
+                    //Do nothing...Let it run through
+                }
+                else {
+                    return false;
+                }
+            }
+            return true;
         }
-        return true;
+        catch(bool){
+            return false;
+
+        }
 
     }
 
-
+    //template<typename T, int dim>
     inline bool operator!=(const Point &pointA, const Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
-        int size = pointA.getDims();
-        bool result;
-        for (int i = 0; i < size; i++) {
-            result = (pointA.getValue(i) != pointB.getValue(i));
-        }
-        return result;
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
+            }
+            if(pointA.getId() == pointB.getId()){
+                throw DimensionalityMismatchEx(2);
+            }
+            int size = pointA.getDims();
+            bool result;
+            for (int i = 0; i < size; i++) {
+                result = (pointA.getValue(i) != pointB.getValue(i));
+            }
+            return result;
 
+        }
+        catch(bool){
+            return false;
+        }
     }
 
+
+    //template<typename T, int dim>
     inline bool operator<(const Point &pointA, const Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
+            }
+            int size = pointA.getDims();
+            for (int i = 0; i < size; i++) {
+                if (pointA.getValue(i) == pointB.getValue(i)) {
+                    //doesn't have to do much, make its way until its either not true or false
+                }
+                else if (pointA.getValue(i) < pointB.getValue(i)) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
 
-        int size = pointA.getDims();
-        for (int i = 0; i < size; i++) {
-            if (pointA.getValue(i) == pointB.getValue(i)) {
-                //doesn't have to do much, make its way until its either not true or false
             }
-            else if (pointA.getValue(i) < pointB.getValue(i)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-
+            return false;
         }
-        return false;
+        catch(bool){
+            return false;
+        }
     }
 
+    //template<typename T, int dim>
     inline bool operator<=(const Point &pointA, const Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
+            }
+            int size = pointA.getDims();
+            for (int i = 0; i < size; i++) {
+                if (pointA.getValue(i) == pointB.getValue(i)) {
+                    //doesn't have to do much, make its way until its either not true or false
+                }
+                else if (pointA.getValue(i) < pointB.getValue(i)) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
 
-        int size = pointA.getDims();
-        for (int i = 0; i < size; i++) {
-            if (pointA.getValue(i) == pointB.getValue(i)) {
-                //doesn't have to do much, make its way until its either not true or false
             }
-            else if (pointA.getValue(i) < pointB.getValue(i)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-
+            return true;
         }
-        return true;
+        catch(bool){
+            return false;
+        }
     }
 
+    //template<typename T, int dim>
     inline bool operator>(const Clustering::Point &pointA, const Clustering::Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
+            }
+            int size = pointA.getDims();
+            for (int i = 0; i < size; i++) {
+                if (pointA.getValue(i) == pointB.getValue(i)) {
+                    //doesn't have to do much, make its way until its either not true or false
+                }
+                else if (pointA.getValue(i) > pointB.getValue(i)) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
 
-        int size = pointA.getDims();
-        for (int i = 0; i < size; i++) {
-            if (pointA.getValue(i) == pointB.getValue(i)) {
-                //doesn't have to do much, make its way until its either not true or false
             }
-            else if (pointA.getValue(i) > pointB.getValue(i)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-
+            return false;
         }
-        return false;
+        catch(bool){
+            return false;
+        }
     }
 
+    //template<typename T, int dim>
     inline bool operator>=(const Clustering::Point &pointA, const Clustering::Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
+            }
+            int size = pointA.getDims();
+            for (int i = 0; i < size; i++) {
+                if (pointA.getValue(i) == pointB.getValue(i)) {
+                    //doesn't have to do much, make its way until its either not true or false
+                }
+                else if (pointA.getValue(i) > pointB.getValue(i)) {
+                    return true;
+                }
+                else {
+                    return false;
+                }
 
-        int size = pointA.getDims();
-        for (int i = 0; i < size; i++) {
-            if (pointA.getValue(i) == pointB.getValue(i)) {
-                //doesn't have to do much, make its way until its either not true or false
             }
-            else if (pointA.getValue(i) > pointB.getValue(i)) {
-                return true;
-            }
-            else {
-                return false;
-            }
-
+            return true;
         }
-        return true;
+        catch(bool){
+            return false;
+        }
     }
 
+    //template<typename T, int dim>
     inline const Point &operator+(const Point &pointA, const Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
+            }
+            int size = pointA.getDims();
+            double value;
+            Point *result = new Point(size);
 
-        int size = pointA.getDims();
-        double value;
-        Point *result = new Point(size);
+            for (int i = 0; i < size; i++) {
+                value = pointA.getValue(i) + pointB.getValue(i);
+                result->setValue(i, value);
+            }
 
-        for (int i = 0; i < size; i++) {
-            value = pointA.getValue(i) + pointB.getValue(i);
-            result->setValue(i, value);
+            return *result;
         }
-
-        return *result;
+        catch(bool){
+            EXIT_FAILURE;
+        }
     }
 
+    //template<typename T, int dim>
     inline const Point &operator-(const Point &pointA, const Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
+            }
+            int size = pointA.getDims();
+            double value;
+            Point *result = new Point(size);
 
-        int size = pointA.getDims();
-        double value;
-        Point *result = new Point(size);
+            for (int i = 0; i < size; i++) {
+                value = pointA.getValue(i) - pointB.getValue(i);
+                result->setValue(i, value);
+            }
 
-        for (int i = 0; i < size; i++) {
-            value = pointA.getValue(i) - pointB.getValue(i);
-            result->setValue(i, value);
+            return *result;
+
+
         }
-
-        return *result;
-
-
+        catch(bool){
+            EXIT_FAILURE;
+        }
     }
 
+    //template<typename T, int dim>
     inline const Point &operator*(const Point &point, const double d) {
         int size = point.getDims();
         double value;
@@ -224,6 +297,7 @@ namespace Clustering {
 
     }
 
+    //template <typename T, int dim>
     inline const Point &operator/(const Point &point, const double d) {
         assert(d != 0);
 
@@ -240,38 +314,53 @@ namespace Clustering {
 
     }
 
+    //template<typename T, int dim>
     inline const Point &operator+=(Point &pointA, const Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
+            }
+            int size = pointA.getDims();
+            double value;
 
-        int size = pointA.getDims();
-        double value;
 
+            for (int i = 0; i < size; i++) {
+                value = pointA.getValue(i) + pointB.getValue(i);
+                pointA.setValue(i, value);
+            }
 
-        for (int i = 0; i < size; i++) {
-            value = pointA.getValue(i) + pointB.getValue(i);
-            pointA.setValue(i, value);
+            return pointA;
+
         }
-
-        return pointA;
-
+        catch(bool){
+            EXIT_FAILURE;
+        }
     }
 
+    //template <typename T, int dim>
     inline const Point &operator-=(Point &pointA, const Point &pointB) {
-        assert(pointA.getDims() == pointB.getDims());
+        try {
+            if(pointA.getDims() != pointB.getDims()){
+                throw DimensionalityMismatchEx(1);
+            }
+            int size = pointA.getDims();
+            double value;
 
-        int size = pointA.getDims();
-        double value;
 
+            for (int i = 0; i < size; i++) {
+                value = pointA.getValue(i) - pointB.getValue(i);
+                pointA.setValue(i, value);
+            }
 
-        for (int i = 0; i < size; i++) {
-            value = pointA.getValue(i) - pointB.getValue(i);
-            pointA.setValue(i, value);
+            return pointA;
+
         }
-
-        return pointA;
-
+        catch(bool){
+            EXIT_FAILURE;
+        }
     }
 
+    //template <typename T, int dim>
     inline const Point &operator*=(Point &point, const double d) {
         int size = point.getDims();
         double value;
@@ -286,6 +375,7 @@ namespace Clustering {
 
     }
 
+    //template <typename T, int dim>
     inline const Point &operator/=(Point &point, const double d) {
         assert(d != 0);
 
@@ -301,6 +391,7 @@ namespace Clustering {
 
     }
 
+    //template <typename T, int dim>
     inline std::ostream &operator<<(std::ostream &os, const Point &point) {
         int size = point.getDims();
         for (int i = 0; i < size; i++) {
@@ -315,27 +406,36 @@ namespace Clustering {
         return os;
     }
 
+    //template <typename T, int dim>
     inline std::istream &operator>>(std::istream &os, Point &point) {
         std::vector<double> valueArr;
         std::string data = "";
         std::getline(os, data, '\n');
         std::stringstream ss(data);
         double k;
-        int dimensions = 0;
+        int dimensions = point.getDims();
+        int count = 0;
 
         while (ss >> k) {
             valueArr.push_back(k);
-            ++dimensions;
+            ++count;
 
             if (ss.peek() == ',' || ss.peek() == ' ') {
                 ss.ignore();
             }
         }
-        point.setDims(dimensions);
-        for (int i = 0; i < point.getDims(); i++){
-            point.setValue(i, valueArr[i]);
-        }
+        try {
+            if(count != dimensions){
+                throw DimensionalityMismatchEx(1);
+            }
+            for (int i = 0; i < point.getDims(); i++) {
+                point.setValue(i, valueArr[i]);
+            }
 
+        }
+        catch(std::string){
+            EXIT_FAILURE;
+        }
     }
 
 }

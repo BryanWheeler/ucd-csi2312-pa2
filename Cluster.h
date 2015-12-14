@@ -44,13 +44,13 @@ namespace Clustering {
 
         //FRIEND FUNCTIONS----------------------------------------------------------------
         //Add Function
-        Cluster &add(const PointPtr);   //DONE***WORKS
-        friend const Cluster &operator+(const Cluster &, const PointPtr);   //DONE***WORKS
-        friend const Cluster &operator+=(Cluster &, const PointPtr);        //DONE***WORKS
+        void add(const PointPtr&);   //DONE***WORKS
+        friend const Cluster &operator+(const Cluster &, const PointPtr&);   //DONE***WORKS
+        friend const Cluster &operator+=(Cluster &, const PointPtr&);        //DONE***WORKS
         //Remove Function
-        Cluster &remove(const PointPtr);   //DONE***WORKS
-        friend const Cluster &operator-(const Cluster &, const PointPtr);   //DONE***WORKS
-        friend const Cluster &operator-=(Cluster &, const PointPtr);   //DONE***WORKS
+        const PointPtr &remove(const PointPtr&);   //DONE***WORKS
+        friend const Cluster &operator-(const Cluster &, const PointPtr&);   //DONE***WORKS
+        friend const Cluster &operator-=(Cluster &, const PointPtr&);   //DONE***WORKS
 
         //Overloaded Arithmetic Operators
         friend const Cluster &operator+(const Cluster &, const Cluster &);   //DONE***WORKS
@@ -83,6 +83,8 @@ namespace Clustering {
 
         const int getID() const {return id;}
 
+        bool contains(const Point&);
+
         const Point& getCentroid();
 
         //Mutator Method
@@ -107,11 +109,11 @@ namespace Clustering {
 
 
         class Move{
-            PointPtr ptr;
+            Point ptr;
             Cluster* clusterFrom;
             Cluster* clusterTo;
         public:
-            Move(const PointPtr& pointer, Cluster* clusterF, Cluster* clusterT);
+            Move(const Point& pointer, Cluster* clusterF, Cluster* clusterT);
             void perform();
             void pickPoints(int k, PointPtr *pointArray);
         };
@@ -120,7 +122,7 @@ namespace Clustering {
     };
 
 
-    inline const Cluster &operator+(const Cluster &cluster, const PointPtr p) {
+    inline const Cluster &operator+(const Cluster &cluster, const PointPtr &p) {
         Clustering::Cluster *result = new Cluster();
         *result = cluster;
 
@@ -131,7 +133,7 @@ namespace Clustering {
 
     }
 
-    inline const Cluster &operator+=(Cluster &cluster, const PointPtr p) {
+    inline const Cluster &operator+=(Cluster &cluster, const PointPtr &p) {
 
         cluster.add(p);
         cluster.setValid(false);
@@ -140,7 +142,7 @@ namespace Clustering {
 
     }
 
-    inline const Cluster &operator-(const Cluster &cluster, const PointPtr p) {
+    inline const Cluster &operator-(const Cluster &cluster, const PointPtr &p) {
         Clustering::Cluster *result = new Cluster();
         *result = cluster;
 
@@ -152,7 +154,7 @@ namespace Clustering {
 
     }
 
-    inline const Cluster &operator-=(Cluster &cluster, const PointPtr p) {
+    inline const Cluster &operator-=(Cluster &cluster, const PointPtr &p) {
 
         cluster.remove(p);
         cluster.setValid(false);
