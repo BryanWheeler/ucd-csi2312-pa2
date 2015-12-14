@@ -3,96 +3,63 @@
 //
 
 #include "KMeans.h"
-#include "ZeroClustersEx.h"
 
-template<int k, int dim>
-double Clustering::KMeans<k, dim>::computeDin() {
-    try {
-        if(clusterArr.size() == 0){
-            throw ZeroClustersEx();
-        }
+double Clustering::KMeans::computeDin() {
         double result;
         for (int i = 0; i < clusterArr.size(); i++) {
             result += clusterArr[i].intraClusterDistance();
         }
         //Din = result;
         return result;
-    }
-    catch(double){
-        return 0;
-    }
+
 }
 
-template<int k, int dim>
-void Clustering::KMeans<k, dim>::addCluster(Clustering::Cluster &cluster) {
+void Clustering::KMeans::addCluster(Clustering::Cluster &cluster) {
     clusterArr.push_back(cluster);
 
 }
 
-template <int k ,int dim>
-double Clustering::KMeans<k, dim>::computeDout() {
-    try {
-        if(clusterArr.size() == 0){
-            throw ZeroClustersEx();
-        }
+double Clustering::KMeans::computeDout() {
+
         double result;
         for (int i = 0; i < clusterArr.size(); i++) {
-            for (int j = 0; j < clusterArr.size(); j++) {
-                result += interClusterDistance(clusterArr[i], clusterArr[j]);
+            for (int k = 0; k < clusterArr.size(); k++) {
+                result += interClusterDistance(clusterArr[i], clusterArr[k]);
             }
         }
         result /= 2;
         //Dout = result;
         return result;
-    }
-    catch(double){
-        return 0;
-    }
+
 }
 
-template<int k, int dim>
-double Clustering::KMeans<k, dim>::computePin() {
-    try {
-        if(clusterArr.size() == 0){
-            throw ZeroClustersEx();
-        }
+double Clustering::KMeans::computePin() {
+
         double result;
         for (int i = 0; i < clusterArr.size(); i++) {
             result += clusterArr[i].getClusterEdges();
         }
         //Pin = result;
         return result;
-    }
-    catch(double){
-        return 0;
-    }
+
 }
 
-template <int k, int dim>
-double Clustering::KMeans<k, dim>::computePout() {
-    try {
-        if (clusterArr.size() == 0) {
-            throw ZeroClustersEx();
-        }
+double Clustering::KMeans::computePout() {
+
 
         double result;
         for (int i = 0; i < clusterArr.size(); i++) {
-            for (int j = i + 1; j < clusterArr.size(); j++) {
-                result += interClusterEdges(clusterArr[i], clusterArr[j]);
+            for (int k = i + 1; k < clusterArr.size(); k++) {
+                result += interClusterEdges(clusterArr[i], clusterArr[k]);
             }
         }
         result /= 2;
         //Pout = result;
         return result;
-    }
-    catch(double){
-        return 0;
-    }
 
 }
 
-template <int k, int dim>
-double Clustering::KMeans<k, dim>::computeClusteringScore() {
+double Clustering::KMeans::computeClusteringScore() {
     Din = computeDin();
     Dout = computeDout();
     Pin = computePin();
